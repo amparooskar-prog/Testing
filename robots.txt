@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://towngaz-infanta.whiteswan32.chatgpt.site/sitemap.xml

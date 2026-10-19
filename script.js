@@ -18,3 +18,6 @@ navigation?.querySelectorAll("a").forEach((link) => {
 
 const year = document.querySelector("#year");
 if (year) year.textContent = String(new Date().getFullYear());
+
+const feed=document.querySelector('#facebook-feed');
+if(feed){let previousWidth=0;const resizeFeed=()=>{const width=Math.max(180,Math.min(500,Math.floor(feed.parentElement.clientWidth-2)));if(width===previousWidth)return;previousWidth=width;const url=new URL(feed.src);url.searchParams.set('width',String(width));feed.src=url.href;};resizeFeed();new ResizeObserver(resizeFeed).observe(feed.parentElement);}
