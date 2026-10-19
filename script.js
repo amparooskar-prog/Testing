@@ -19,5 +19,28 @@ navigation?.querySelectorAll("a").forEach((link) => {
 const year = document.querySelector("#year");
 if (year) year.textContent = String(new Date().getFullYear());
 
-const feed=document.querySelector('#facebook-feed');
-if(feed){let previousWidth=0;const resizeFeed=()=>{const width=Math.max(180,Math.min(500,Math.floor(feed.parentElement.clientWidth-2)));if(width===previousWidth)return;previousWidth=width;const url=new URL(feed.src);url.searchParams.set('width',String(width));feed.src=url.href;};resizeFeed();new ResizeObserver(resizeFeed).observe(feed.parentElement);}
+// Individual public posts work where Facebook's full Page timeline is unavailable.
+document.querySelectorAll('.facebook-post-frame').forEach(frame => {
+  const viewport = frame.parentElement;
+  let lastWidth = 0;
+  const resize = () => {
+    const available = Math.floor(viewport.clientWidth);
+    if (!available) return;
+    const width = Math.max(350, Math.min(500, available));
+    const scale = Math.min(1, available / width);
+    frame.style.width = width + 'px';
+    frame.style.maxWidth = 'none';
+    frame.style.transformOrigin = 'top left';
+    frame.style.transform = 'scale(' + scale + ')';
+    viewport.style.height = (Number(frame.dataset.height) * scale) + 'px';
+    if (width !== lastWidth) {
+      const url = new URL(frame.src);
+      url.searchParams.set('width', String(width));
+      if (url.href !== frame.src) frame.src = url.href;
+      lastWidth = width;
+    }
+  };
+  resize();
+  if ('ResizeObserver' in window) new ResizeObserver(resize).observe(viewport);
+  else window.addEventListener('resize', resize);
+});
